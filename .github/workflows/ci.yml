@@ -1,0 +1,73 @@
+# .github/workflows/ci.yml
+name: CI/CD
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - run: pip install ruff mypy
+      - run: ruff check .
+      - run: mypy backend/
+
+  test:
+    needs: lint
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_DB: testdb
+          POSTGRES_PASSWORD: password
+        ports: [5432:5432]
+      redis:
+        image: redis:7
+        ports: [6379:6379]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+      - run: pip install -r requirements.txt
+      - run: pytest -v
+
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build Docker Images
+        run: |
+          docker build -t ecommerce-backend -f docker/backend.Dockerfile .
+          docker build -t ecommerce-frontend -f docker/frontend.Dockerfile .
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: docker-images
+          path: .
+
+  deploy-staging:
+    if: github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to Staging (e.g. VPS)
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.STAGING_HOST }}
+          username: ubuntu
+          key: ${{ secrets.STAGING_SSH_KEY }}
+          script: |
+            cd /opt/ecomplus
+            git pull
+            docker-compose down
+            docker-compose up -d --build
+

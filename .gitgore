@@ -1,0 +1,37 @@
+# .gitignore
+echo "
+# Python
+__pycache__
+*.py[cod]
+*$py.class
+.env
+.venv
+env/
+venv/
+virtualenv/
+.Python
+
+# Node
+node_modules/
+.next
+out/
+build/
+
+# Docker
+.dockerenv
+docker-compose.override.yml
+
+# IDE
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Logs
+logs
+*.log
+
+# Environment
+.env.local
+.env.production
+" > .gitignore
