@@ -1,0 +1,38 @@
+{
+  "name": "fashionpod-turborepo",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev --parallel",
+    "dev:web": "turbo run dev --filter=web",
+    "dev:services": "turbo run dev --filter=./services/*",
+    "lint": "turbo run lint",
+    "type-check": "turbo run type-check",
+    "test": "turbo run test",
+    "test:e2e": "turbo run test:e2e",
+    "clean": "turbo run clean && rm -rf node_modules",
+    "db:generate": "turbo run db:generate",
+    "db:push": "turbo run db:push",
+    "db:studio": "turbo run db:studio",
+    "seed": "turbo run seed",
+    "docker:dev": "docker-compose -f infra/docker-compose.dev.yml up -d",
+    "docker:prod": "docker-compose -f infra/docker-compose.prod.yml up -d",
+    "format": "prettier --write .",
+    "storybook": "turbo run storybook"
+  },
+  "devDependencies": {
+    "turbo": "^1.10.12",
+    "prettier": "^3.0.3",
+    "typescript": "^5.2.2",
+    "@types/node": "^20.5.9",
+    "eslint": "^8.48.0",
+    "lint-staged": "^14.0.1",
+    "husky": "^8.0.3"
+  },
+  "packageManager": "pnpm@8.7.0",
+  "engines": {
+    "node": ">=18",
+    "pnpm": ">=8"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "name": "@fashionpod/database",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "db:generate": "drizzle-kit generate:pg",
+    "db:push": "drizzle-kit push:pg",
+    "db:studio": "drizzle-kit studio",
+    "seed": "tsx src/seed.ts",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "drizzle-orm": "^0.29.1",
+    "postgres": "^3.4.1",
+    "drizzle-zod": "^0.4.1",
+    "@fashionpod/validations": "workspace:*"
+  },
+  "devDependencies": {
+    "drizzle-kit": "^0.20.7",
+    "tsx": "^4.6.0",
+    "@types/pg": "^8.10.0",
+    "typescript": "^5.2.2"
+  }
+}
